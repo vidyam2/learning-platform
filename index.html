@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnFlow — Online Learning Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="logo">Learn<span>Flow</span></div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="dashboard.html">My Courses <span class="badge" id="navBadge">0</span></a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-pill">✦ 6 Courses &nbsp;·&nbsp; 90 Lessons</div>
+  <h1>Learn skills that<br><span class="highlight">actually matter.</span></h1>
+  <p class="hero-sub">Browse courses, enroll, track your progress and complete lessons at your own pace — all saved locally in your browser.</p>
+  <div class="hero-btns">
+    <a href="courses.html" class="btn btn-primary">Browse Courses &rarr;</a>
+    <a href="dashboard.html" class="btn btn-outline">My Dashboard</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-number">6</div>
+      <div class="stat-label">Expert Courses</div>
+    </div>
+    <div>
+      <div class="stat-number">90</div>
+      <div class="stat-label">Total Lessons</div>
+    </div>
+    <div>
+      <div class="stat-number">23k+</div>
+      <div class="stat-label">Students</div>
+    </div>
+    <div>
+      <div class="stat-number">4.8 ★</div>
+      <div class="stat-label">Avg Rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED ── -->
+<div class="featured-card">
+  <div class="featured-inner" id="featuredInner">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- ── COURSE GRID ── -->
+<div class="section">
+  <div class="section-head">
+    <h2 class="section-title">Popular Courses</h2>
+    <a href="courses.html" class="section-link">View all →</a>
+  </div>
+  <div class="course-grid" id="homeGrid"></div>
+</div>
+
+<footer>
+  Online Learning Platform Project &nbsp;·&nbsp; <span>LearnFlow</span>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">🎉</span>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+  // Update nav badge
+  document.getElementById('navBadge').textContent = Storage.getEnrolled().length;
+
+  // Featured = highest rated course
+  const featured = COURSES.reduce((a, b) => b.rating > a.rating ? b : a);
+  document.getElementById('featuredInner').innerHTML = `
+    <div>
+      <div class="featured-label">⭐ Top Rated Course</div>
+      <h2>${featured.title}</h2>
+      <p>${featured.description}</p>
+      <div class="featured-actions">
+        <a href="course-detail.html?id=${featured.id}" class="btn btn-primary">Start Learning &rarr;</a>
+        <small>${featured.students.toLocaleString()} students &nbsp;·&nbsp; ${featured.duration}</small>
+      </div>
+    </div>
+    <div class="featured-emoji">${featured.icon}</div>
+  `;
+
+  // Render first 3 courses
+  const grid = document.getElementById('homeGrid');
+  COURSES.slice(0, 3).forEach(c => {
+    const enrolled = Storage.isEnrolled(c.id);
+    const pct = Storage.getPercent(c.id);
+    const card = document.createElement('a');
+    card.href = `course-detail.html?id=${c.id}`;
+    card.className = 'course-card fade-up';
+    card.innerHTML = `
+      <div class="card-banner" style="background:${c.color}1A;">${c.icon}</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag tag-cat">${c.category}</span>
+          <span class="tag tag-lvl">${c.level}</span>
+          ${enrolled ? `<span class="tag tag-enrolled">✓ Enrolled</span>` : ''}
+        </div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-desc">${c.description}</div>
+        ${enrolled ? `
+          <div class="prog-wrap">
+            <div class="prog-labels"><span>Progress</span><span>${pct}%</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+          </div>` : ''}
+        <div class="card-footer">
+          <span class="card-rating">★ ${c.rating}</span>
+          <span>${c.lessons} lessons · ${c.duration}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+</script>
+</body>
+</html>
