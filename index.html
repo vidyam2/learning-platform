@@ -67,8 +67,95 @@
 
   /* PAGES */
   .page { display: none; }
-  .page.active { display: block; }
+  .page.active { display: block; animation: fadeUp 0.22s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── BREADCRUMB / BACK BAR ── */
+  .page-topbar {
+    width: 100%;
+    background: rgba(14,22,35,0.7);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    padding: 0 24px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    list-style: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .breadcrumb li { display: flex; align-items: center; }
+  .breadcrumb li + li::before {
+    content: '›';
+    margin: 0 8px;
+    color: #2a4060;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .breadcrumb .bc-link {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 12px; font-weight: 600;
+    font-family: 'Manrope', sans-serif;
+    padding: 4px 8px; border-radius: 6px;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+    text-decoration: none;
+  }
+  .breadcrumb .bc-link:hover {
+    color: var(--accent);
+    background: rgba(59,130,246,0.08);
+  }
+  .breadcrumb .bc-current {
+    color: var(--text);
+    font-weight: 700;
+    padding: 4px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+
+  /* BACK BUTTON (detail page hero style) */
+  .back-fab {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 13px; font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+    cursor: pointer;
+    padding: 8px 16px;
+    margin-bottom: 28px;
+    transition: all 0.18s;
+  }
+  .back-fab:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.07);
+    transform: translateX(-2px);
+  }
+  .back-fab .arrow {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: var(--surface2);
+    font-size: 14px;
+    transition: transform 0.18s;
+  }
+  .back-fab:hover .arrow { transform: translateX(-2px); }
 
   /* HERO */
   .hero {
@@ -150,6 +237,47 @@
   }
   .btn-sm:hover { opacity: 0.85; }
   .enrolled-tag { color: var(--green); font-size: 13px; font-weight: 700; }
+  .btn-unenroll {
+    background: rgba(239,68,68,0.08); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.25); cursor: pointer;
+    padding: 7px 14px; border-radius: 8px;
+    font-weight: 700; font-size: 12px;
+    font-family: 'Manrope', sans-serif;
+    transition: all 0.15s;
+  }
+  .btn-unenroll:hover { background: rgba(239,68,68,0.18); border-color: #f87171; color: #fff; }
+  /* Confirm modal */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 32px 28px; max-width: 360px; width: 90%;
+    text-align: center; transform: scale(0.95); transition: transform 0.2s;
+  }
+  .modal-overlay.show .modal { transform: scale(1); }
+  .modal-icon { font-size: 40px; margin-bottom: 14px; }
+  .modal-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .modal-desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-cancel {
+    flex: 1; background: var(--surface2); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 11px; font-weight: 700; font-size: 14px;
+    font-family: 'Manrope', sans-serif; cursor: pointer; transition: all 0.15s;
+  }
+  .modal-cancel:hover { color: var(--text); }
+  .modal-confirm {
+    flex: 1; background: rgba(239,68,68,0.12); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3); border-radius: 10px;
+    padding: 11px; font-weight: 700; font-size: 14px;
+    font-family: 'Manrope', sans-serif; cursor: pointer; transition: all 0.15s;
+  }
+  .modal-confirm:hover { background: rgba(239,68,68,0.25); color: #fff; }
 
   /* SECTION */
   .section { margin-top: 56px; }
@@ -227,13 +355,6 @@
   .chip.active { background: #1d4ed8; border-color: var(--accent); color: #fff; }
 
   /* DETAIL PAGE */
-  .back-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--accent); font-size: 13px; font-weight: 700;
-    font-family: 'Manrope', sans-serif; margin-bottom: 28px; padding: 0;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .back-btn:hover { color: var(--accent2); }
   .detail-header { display: flex; gap: 28px; margin-bottom: 32px; align-items: flex-start; flex-wrap: wrap; }
   .detail-emoji { width: 76px; height: 76px; border-radius: 20px; font-size: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .detail-meta { flex: 1; min-width: 240px; }
@@ -319,6 +440,7 @@
     .dash-stat { padding: 14px 10px; }
     .dash-stat-val { font-size: 22px; }
     .detail-title { font-size: 24px; }
+    .breadcrumb .bc-current { max-width: 120px; }
   }
   @media (max-width: 480px) {
     .nav-btn span.nav-label { display: none; }
@@ -342,8 +464,22 @@
 <!-- TOAST -->
 <div id="toast"></div>
 
+<!-- UNENROLL CONFIRM MODAL -->
+<div class="modal-overlay" id="unenroll-modal">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Unenroll from course?</div>
+    <div class="modal-desc">Your progress will be lost and you'll need to re-enroll to continue learning.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeUnenrollModal()">Keep Enrolled</button>
+      <button class="modal-confirm" onclick="confirmUnenroll()">Yes, Unenroll</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="page-home">
+  <!-- No topbar on home — it IS the root -->
   <div class="hero">
     <div class="hero-badge">✨ Learn at your own pace</div>
     <h1>Unlock your <span>potential</span><br>one lesson at a time</h1>
@@ -371,6 +507,17 @@
 
 <!-- ===================== COURSES PAGE ===================== -->
 <div class="page" id="page-courses">
+  <!-- Topbar with breadcrumb -->
+  <div class="page-topbar">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <li>
+        <button class="bc-link" onclick="showPage('home')" title="Go home">
+          <span>🏠</span> Home
+        </button>
+      </li>
+      <li><span class="bc-current">All Courses</span></li>
+    </nav>
+  </div>
   <div class="container">
     <div class="page-header">
       <h1 class="page-title">All Courses</h1>
@@ -385,6 +532,17 @@
 
 <!-- ===================== DASHBOARD PAGE ===================== -->
 <div class="page" id="page-dashboard">
+  <!-- Topbar with breadcrumb -->
+  <div class="page-topbar">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <li>
+        <button class="bc-link" onclick="showPage('home')" title="Go home">
+          <span>🏠</span> Home
+        </button>
+      </li>
+      <li><span class="bc-current">My Dashboard</span></li>
+    </nav>
+  </div>
   <div class="container">
     <div class="page-header">
       <h1 class="page-title">My Dashboard</h1>
@@ -394,6 +552,8 @@
       <div class="big-icon">🎓</div>
       <h2>No courses yet</h2>
       <p>Enroll in a course to start tracking your progress.</p>
+      <br>
+      <button class="btn-primary" onclick="showPage('courses')" style="margin-top:8px">Browse Courses →</button>
     </div>
     <div id="dash-content" style="display:none">
       <div class="dash-stats">
@@ -408,8 +568,15 @@
 
 <!-- ===================== DETAIL PAGE ===================== -->
 <div class="page" id="page-detail">
+  <!-- Dynamic breadcrumb injected here -->
+  <div class="page-topbar" id="detail-topbar"></div>
   <div class="container">
-    <button class="back-btn" onclick="goBack()">← Back to Courses</button>
+    <!-- Pill-style back button inside content area -->
+    <button class="back-fab" id="back-fab-btn" onclick="goBack()">
+      <span class="arrow">←</span>
+      <span id="back-fab-label">Back to Courses</span>
+    </button>
+
     <div class="detail-header">
       <div class="detail-emoji" id="d-emoji"></div>
       <div class="detail-meta">
@@ -485,6 +652,29 @@ function enrollIn(id) {
   renderAll();
 }
 
+let unenrollTargetId = null;
+function askUnenroll(id) {
+  unenrollTargetId = id;
+  document.getElementById("unenroll-modal").classList.add("show");
+}
+function closeUnenrollModal() {
+  document.getElementById("unenroll-modal").classList.remove("show");
+  unenrollTargetId = null;
+}
+function confirmUnenroll() {
+  if (!unenrollTargetId) return;
+  const c = COURSES.find(x => x.id === unenrollTargetId);
+  delete userData.enrolled[unenrollTargetId];
+  delete userData.progress[unenrollTargetId];
+  saveData();
+  updateNavCount();
+  closeUnenrollModal();
+  showToast(`Unenrolled from "${c.title}"`, "#ef4444");
+  renderAll();
+  // If we're on detail page, refresh it
+  if (currentCourse && currentCourse.id === unenrollTargetId) refreshDetail();
+}
+
 function toggleLesson(courseId, idx) {
   userData.progress[courseId][idx] = !userData.progress[courseId][idx];
   saveData();
@@ -497,6 +687,43 @@ function updateNavCount() {
   const el = document.getElementById("enroll-count");
   el.textContent = n;
   el.style.display = n > 0 ? "inline" : "none";
+}
+
+// ===================== BACK NAVIGATION =====================
+// Maps page names to human-readable labels and icons
+const PAGE_META = {
+  home:      { label: "Home",         icon: "🏠" },
+  courses:   { label: "All Courses",  icon: "📖" },
+  dashboard: { label: "My Dashboard", icon: "🎓" },
+};
+
+function goBack() {
+  showPage(prevPage === "detail" ? "courses" : prevPage);
+}
+
+// Build the breadcrumb for the detail page dynamically
+function buildDetailBreadcrumb(course) {
+  const parentMeta = PAGE_META[prevPage] || PAGE_META.courses;
+  const topbar = document.getElementById("detail-topbar");
+  topbar.innerHTML = `
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <li>
+        <button class="bc-link" onclick="showPage('home')" title="Go home">
+          <span>🏠</span> Home
+        </button>
+      </li>
+      ${prevPage !== 'home' ? `
+      <li>
+        <button class="bc-link" onclick="showPage('${prevPage}')" title="Back to ${parentMeta.label}">
+          <span>${parentMeta.icon}</span> ${parentMeta.label}
+        </button>
+      </li>` : ''}
+      <li><span class="bc-current" title="${course.title}">${course.title}</span></li>
+    </nav>`;
+
+  // Also update the pill-style back button label
+  const backLabel = document.getElementById("back-fab-label");
+  backLabel.textContent = `Back to ${parentMeta.label}`;
 }
 
 // ===================== NAVIGATION =====================
@@ -513,16 +740,19 @@ function showPage(name) {
 }
 
 function openDetail(id) {
-  prevPage = document.querySelector(".page.active").id.replace("page-","");
+  // Remember which page we came from (but skip "detail" itself)
+  const currentActive = document.querySelector(".page.active");
+  if (currentActive && currentActive.id !== "page-detail") {
+    prevPage = currentActive.id.replace("page-", "");
+  }
   currentCourse = COURSES.find(c => c.id === id);
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   document.getElementById("page-detail").classList.add("active");
+  buildDetailBreadcrumb(currentCourse);
   refreshDetail();
   window.scrollTo(0, 0);
 }
-
-function goBack() { showPage(prevPage === "detail" ? "courses" : prevPage); }
 
 // ===================== RENDER HELPERS =====================
 function cardHTML(c, showProgress) {
@@ -533,7 +763,7 @@ function cardHTML(c, showProgress) {
     <div class="prog-bar" style="margin-top:10px"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
     <div class="prog-label">${pct}% complete</div>` : "";
   const actionHtml = enrolled
-    ? `<span class="enrolled-tag">✓ Enrolled</span>`
+    ? `<button class="btn-unenroll" onclick="event.stopPropagation();askUnenroll(${c.id})">✕ Unenroll</button>`
     : `<button class="btn-sm" onclick="event.stopPropagation();enrollIn(${c.id})">Enroll Free</button>`;
   return `
   <div class="card" onclick="openDetail(${c.id})">
@@ -643,7 +873,11 @@ function refreshDetail() {
   document.getElementById("d-title").textContent = c.title;
   document.getElementById("d-desc").textContent = c.desc;
   document.getElementById("d-action").innerHTML = enrolled
-    ? `<div style="display:flex;align-items:center;gap:12px"><span style="color:var(--green);font-weight:800;font-size:15px">✓ Enrolled</span><span style="color:var(--muted);font-size:14px">${pct}% complete</span></div>`
+    ? `<div style="display:flex;align-items:center;gap:12px">
+        <span style="color:var(--green);font-weight:800;font-size:15px">✓ Enrolled</span>
+        <span style="color:var(--muted);font-size:14px">${pct}% complete</span>
+        <button class="btn-unenroll" onclick="askUnenroll(${c.id})">✕ Unenroll</button>
+       </div>`
     : `<button class="btn-primary" onclick="enrollIn(${c.id})">Enroll Now — It's Free</button>`;
   const pb = document.getElementById("d-prog-box");
   if (enrolled) {
